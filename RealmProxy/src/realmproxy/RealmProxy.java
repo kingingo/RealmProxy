@@ -12,7 +12,6 @@ import realmbase.RealmBase;
 import realmproxy.net.ListenSocket;
 import realmproxy.player.ConnectListener;
 import realmproxy.player.MessageListener;
-import realmproxy.player.ObjectListener;
 import realmproxy.player.Player;
 
 public class RealmProxy {
@@ -40,7 +39,6 @@ public class RealmProxy {
 		RealmBase.init();
 		new ConnectListener();
 		new MessageListener();
-		new ObjectListener();
 	}
 	
 	public static void main(String[] args) {

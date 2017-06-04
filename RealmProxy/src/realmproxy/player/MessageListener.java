@@ -17,9 +17,11 @@ public class MessageListener implements PacketListener{
 	@Override
 	public boolean onReceive(Client c, Packet packet, Type from) {
 		Player client = (Player)c;
-		if(packet.getId() == GetXml.getPacketMapName().get("NEW_TICK")){
+		if(packet.getId() == GetXml.getPacketMapName().get("GOTO")){
 			RealmBase.println("D: "+packet.toString());
-		}else if(packet.getId() == GetXml.getPacketMapName().get("MOVE")){
+		}else if(packet.getId() == GetXml.getPacketMapName().get("GOTOACK")){
+			RealmBase.println("T: "+(System.currentTimeMillis()));
+			RealmBase.println("T: "+(System.currentTimeMillis()-c.getConnectTime()));
 			RealmBase.println("D: "+packet.toString());
 		}
 		
