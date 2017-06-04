@@ -3,10 +3,12 @@ package realmproxy.player;
 import realmbase.Client;
 import realmbase.GetXml;
 import realmbase.RealmBase;
+import realmbase.data.Location;
 import realmbase.data.Type;
 import realmbase.listener.PacketListener;
 import realmbase.listener.PacketManager;
 import realmbase.packets.Packet;
+import realmbase.packets.client.MovePacket;
 
 public class MessageListener implements PacketListener{
 	
@@ -14,15 +16,13 @@ public class MessageListener implements PacketListener{
 		PacketManager.addListener(this);
 	}
 	
+	Location last;
+	
 	@Override
 	public boolean onReceive(Client c, Packet packet, Type from) {
-		Player client = (Player)c;
-		if(packet.getId() == GetXml.getPacketMapName().get("GOTO")){
-			RealmBase.println("D: "+packet.toString());
-		}else if(packet.getId() == GetXml.getPacketMapName().get("GOTOACK")){
-			RealmBase.println("T: "+(System.currentTimeMillis()));
-			RealmBase.println("T: "+(System.currentTimeMillis()-c.getConnectTime()));
-			RealmBase.println("D: "+packet.toString());
+		if(packet.getId() == GetXml.getPacketMapName().get("MOVE")){
+			MovePacket mpacket = (MovePacket)packet;
+			RealmBase.println("LOC: "+mpacket.getNewPosition().x+"/"+mpacket.getNewPosition().y);
 		}
 		
 		return false;
