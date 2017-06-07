@@ -8,7 +8,9 @@ import realmbase.data.Type;
 import realmbase.listener.PacketListener;
 import realmbase.listener.PacketManager;
 import realmbase.packets.Packet;
+import realmbase.packets.client.CreatePacket;
 import realmbase.packets.client.MovePacket;
+import realmbase.packets.client.UsePortalPacket;
 
 public class MessageListener implements PacketListener{
 	
@@ -20,9 +22,9 @@ public class MessageListener implements PacketListener{
 	
 	@Override
 	public boolean onReceive(Client c, Packet packet, Type from) {
-		if(packet.getId() == GetXml.getPacketMapName().get("MOVE")){
-			MovePacket mpacket = (MovePacket)packet;
-			RealmBase.println("LOC: "+mpacket.getNewPosition().x+"/"+mpacket.getNewPosition().y);
+		if(packet.getId() == GetXml.getPacketMapName().get("USEPORTAL")){
+			UsePortalPacket cpacket = (UsePortalPacket)packet;
+			RealmBase.println("C: "+cpacket.toString());
 		}
 		
 		return false;

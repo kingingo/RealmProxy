@@ -41,10 +41,6 @@ public class Player extends Client{
 	private RC4 localRecvRC4;
 	private RC4 localSendRC4;
 	
-	@Setter
-	@Getter
-	private HelloPacket helloPacket = null;
-	
 	public Player(Socket localSocket){
 		if(localSocket == null){
 			throw new NullPointerException("Socket darf nicht null sein!");
@@ -56,7 +52,7 @@ public class Player extends Client{
 		getNewPlayers().add(this);
 	}
 	
-	public boolean connect(int gameId) {
+	public boolean connect(HelloPacket packet, int gameId) {
 		final InetSocketAddress socketAddress = RealmProxy.getSocketAddress(gameId);
 
 		return connect(socketAddress, new Callback<Client>() {
@@ -68,7 +64,7 @@ public class Player extends Client{
 					kick();
 				}else{
 					RealmBase.println("Send HelloPacket");
-					client.sendPacketToServer(getHelloPacket());
+					client.sendPacketToServer(packet);
 				}
 			}
 		});
@@ -123,7 +119,7 @@ public class Player extends Client{
 								}
 								this.remoteBufferIndex -= packetLength;
 								this.remoteRecvRC4.cipher(packetBytes);
-//								if(packetId!=74&&packetId!=33&&packetId!=18&&packetId!=101&&packetId!=1&&packetId!=35&&packetId!=52&&packetId!=102&&packetId!=69)
+								if(packetId!=74&&packetId!=33&&packetId!=18&&packetId!=101&&packetId!=1&&packetId!=35&&packetId!=52&&packetId!=102&&packetId!=69)
 									RealmBase.println("Server -> Client: Id:"+(GetXml.getPacketMap().containsKey(String.valueOf(packetId)) ? GetXml.getPacketMap().get(String.valueOf(packetId)) : packetId)+" Length: "+packetBytes.length);
 								
 								Packet packet = Packet.create(packetId, packetBytes);
@@ -162,7 +158,7 @@ public class Player extends Client{
 						}
 						this.localBufferIndex -= packetLength;
 						this.localRecvRC4.cipher(packetBytes);
-//						if(packetId!=74&&packetId!=33&&packetId!=18&&packetId!=101&&packetId!=1&&packetId!=35&&packetId!=52&&packetId!=102&&packetId!=69)
+						if(packetId!=74&&packetId!=33&&packetId!=18&&packetId!=101&&packetId!=1&&packetId!=35&&packetId!=52&&packetId!=102&&packetId!=69)
 							RealmBase.println("Client -> Server: Id:"+(GetXml.getPacketMap().containsKey(String.valueOf(packetId)) ? GetXml.getPacketMap().get(String.valueOf(packetId)) : packetId)+" Length: "+packetBytes.length);
 						
 						Packet packet = Packet.create(packetId, packetBytes);

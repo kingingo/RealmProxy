@@ -27,7 +27,7 @@ public class ConnectListener implements PacketListener{
 		Player client = (Player)c;
 		if(packet.getId() == GetXml.getPacketMapName().get("RECONNECT")){
 			ReconnectPacket rpacket = (ReconnectPacket)packet;
-			System.out.println("Detailes: "+rpacket.toString());
+			RealmBase.println("Detailes: "+rpacket.toString());
 			
 			String host = rpacket.getHost();
 			int port = rpacket.getPort();
@@ -49,8 +49,8 @@ public class ConnectListener implements PacketListener{
 		}else if(packet.getId() == GetXml.getPacketMapName().get("HELLO")){
 			HelloPacket hpacket = (HelloPacket)packet;
 			RealmBase.println("Receive HelloPacket initialize connection!");
-			client.setHelloPacket(hpacket);
-			client.connect(hpacket.getGameId());
+			RealmBase.println("Detailes: "+hpacket.toString());
+			client.connect(hpacket, hpacket.getGameId());
 			return true;
 		}else if(packet.getId() == GetXml.getPacketMapName().get("FAILURE")){
 			FailurePacket fpacket = (FailurePacket)packet;
