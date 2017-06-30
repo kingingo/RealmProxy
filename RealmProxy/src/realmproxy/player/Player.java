@@ -3,20 +3,15 @@ package realmproxy.player;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.Vector;
 
 import lombok.Getter;
-import lombok.Setter;
 import realmbase.Client;
-import realmbase.GetXml;
 import realmbase.Parameter;
 import realmbase.RealmBase;
 import realmbase.data.Callback;
@@ -25,6 +20,7 @@ import realmbase.encryption.RC4;
 import realmbase.listener.PacketManager;
 import realmbase.packets.Packet;
 import realmbase.packets.client.HelloPacket;
+import realmbase.xml.GetXml;
 import realmproxy.RealmProxy;
 
 public class Player extends Client{
@@ -119,8 +115,8 @@ public class Player extends Client{
 								}
 								this.remoteBufferIndex -= packetLength;
 								this.remoteRecvRC4.cipher(packetBytes);
-								if(packetId!=74&&packetId!=33&&packetId!=18&&packetId!=101&&packetId!=1&&packetId!=35&&packetId!=52&&packetId!=102&&packetId!=69)
-									RealmBase.println("Server -> Client: Id:"+(GetXml.getPacketMap().containsKey(String.valueOf(packetId)) ? GetXml.getPacketMap().get(String.valueOf(packetId)) : packetId)+" Length: "+packetBytes.length);
+//								if(packetId!=74&&packetId!=33&&packetId!=18&&packetId!=101&&packetId!=1&&packetId!=35&&packetId!=52&&packetId!=102&&packetId!=69)
+									RealmBase.println("Server -> Client: Id:"+(GetXml.packetMap.containsKey(String.valueOf(packetId)) ? GetXml.packetMap.get(String.valueOf(packetId)) : packetId)+" Length: "+packetBytes.length);
 								
 								Packet packet = Packet.create(packetId, packetBytes);
 								if(!PacketManager.receive(this, packet, Type.SERVER))sendPacketToClient(packet);
@@ -158,8 +154,8 @@ public class Player extends Client{
 						}
 						this.localBufferIndex -= packetLength;
 						this.localRecvRC4.cipher(packetBytes);
-						if(packetId!=74&&packetId!=33&&packetId!=18&&packetId!=101&&packetId!=1&&packetId!=35&&packetId!=52&&packetId!=102&&packetId!=69)
-							RealmBase.println("Client -> Server: Id:"+(GetXml.getPacketMap().containsKey(String.valueOf(packetId)) ? GetXml.getPacketMap().get(String.valueOf(packetId)) : packetId)+" Length: "+packetBytes.length);
+//						if(packetId!=74&&packetId!=33&&packetId!=18&&packetId!=101&&packetId!=1&&packetId!=35&&packetId!=52&&packetId!=102&&packetId!=69)
+							RealmBase.println("Client -> Server: Id:"+(GetXml.packetMap.containsKey(String.valueOf(packetId)) ? GetXml.packetMap.get(String.valueOf(packetId)) : packetId)+" Length: "+packetBytes.length);
 						
 						Packet packet = Packet.create(packetId, packetBytes);
 						if(!PacketManager.receive(this, packet, Type.CLIENT))sendPacketToServer(packet);

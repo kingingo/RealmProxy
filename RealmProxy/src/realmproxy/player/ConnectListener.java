@@ -3,7 +3,6 @@ package realmproxy.player;
 import java.io.IOException;
 
 import realmbase.Client;
-import realmbase.GetXml;
 import realmbase.Parameter;
 import realmbase.RealmBase;
 import realmbase.data.Type;
@@ -14,6 +13,7 @@ import realmbase.packets.client.HelloPacket;
 import realmbase.packets.server.Create_SuccessPacket;
 import realmbase.packets.server.FailurePacket;
 import realmbase.packets.server.ReconnectPacket;
+import realmbase.xml.GetXml;
 import realmproxy.RealmProxy;
 
 public class ConnectListener implements PacketListener{
@@ -25,7 +25,7 @@ public class ConnectListener implements PacketListener{
 	@Override
 	public boolean onReceive(Client c, Packet packet, Type from) {
 		Player client = (Player)c;
-		if(packet.getId() == GetXml.getPacketMapName().get("RECONNECT")){
+		if(packet.getId() == GetXml.packetMapName.get("RECONNECT")){
 			ReconnectPacket rpacket = (ReconnectPacket)packet;
 			RealmBase.println("Detailes: "+rpacket.toString());
 			
@@ -46,16 +46,16 @@ public class ConnectListener implements PacketListener{
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}else if(packet.getId() == GetXml.getPacketMapName().get("HELLO")){
+		}else if(packet.getId() == GetXml.packetMapName.get("HELLO")){
 			HelloPacket hpacket = (HelloPacket)packet;
 			RealmBase.println("Receive HelloPacket initialize connection!");
 			RealmBase.println("Detailes: "+hpacket.toString());
 			client.connect(hpacket, hpacket.getGameId());
 			return true;
-		}else if(packet.getId() == GetXml.getPacketMapName().get("FAILURE")){
+		}else if(packet.getId() == GetXml.packetMapName.get("FAILURE")){
 			FailurePacket fpacket = (FailurePacket)packet;
 			RealmBase.println("FailurePacket-> "+fpacket.getErrorId()+" "+fpacket.getErrorDescription());
-		}else if(packet.getId() == GetXml.getPacketMapName().get("CREATE_SUCCESS")){
+		}else if(packet.getId() == GetXml.packetMapName.get("CREATE_SUCCESS")){
 			Create_SuccessPacket cpacket = (Create_SuccessPacket)packet;
 			client.setClientId(cpacket.getObjectId());
 		}
