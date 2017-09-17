@@ -75,8 +75,11 @@ public class Player extends Client{
 				try {
 					this.localSendRC4.cipher(packetBytes);
 					int packetLength = packetBytes.length + 5;
-						
+					
+					if(this.localSocket.getOutputStream()==null)RealmBase.println(this, "Error OutputStream ist null!");
+					
 					DataOutputStream out = new DataOutputStream(this.localSocket.getOutputStream());
+					if(out==null)RealmBase.println(this, "Error DataOutputStream ist null!");
 					out.writeInt(packetLength);
 					out.writeByte(packet.getId());
 					out.write(packetBytes);
