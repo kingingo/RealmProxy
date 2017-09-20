@@ -2,12 +2,12 @@ package realmproxy.player;
 
 import java.io.IOException;
 
-import realmbase.Client;
 import realmbase.Parameter;
 import realmbase.RealmBase;
-import realmbase.data.Type;
-import realmbase.listener.PacketListener;
-import realmbase.listener.PacketManager;
+import realmbase.event.EventHandler;
+import realmbase.event.EventListener;
+import realmbase.event.EventManager;
+import realmbase.event.events.PacketReceiveEvent;
 import realmbase.packets.Packet;
 import realmbase.packets.client.HelloPacket;
 import realmbase.packets.server.Create_SuccessPacket;
@@ -16,15 +16,16 @@ import realmbase.packets.server.ReconnectPacket;
 import realmbase.xml.GetXml;
 import realmproxy.RealmProxy;
 
-public class ConnectListener implements PacketListener{
+public class ConnectListener implements EventListener{
 	
 	public ConnectListener() {
-		PacketManager.addListener(this);
+		EventManager.register(this);
 	}
 	
-	@Override
-	public boolean onReceive(Client c, Packet packet, Type from) {
-		Player client = (Player)c;
+	@EventHandler
+	public void onReceive(PacketReceiveEvent ev) {
+		Packet packet = ev.getPacket();
+		Player client = (Player)ev.getClient();
 		if(packet.getId() == GetXml.packetMapName.get("RECONNECT")){
 			ReconnectPacket rpacket = (ReconnectPacket)packet;
 			RealmBase.println("Detailes: "+rpacket.toString());
@@ -51,21 +52,7 @@ public class ConnectListener implements PacketListener{
 			RealmBase.println("Receive HelloPacket initialize connection!");
 			RealmBase.println("Detailes: "+hpacket.toString());
 			client.connect(hpacket, hpacket.getGameId());
-			return true;
-		}else if(packet.getId() == GetXml.packetMapName.get("FAILURE")){
-			FailurePacket fpacket = (FailurePacket)packet;
-			RealmBase.println("FailurePacket-> "+fpacket.getErrorId()+" "+fpacket.getErrorDescription());
-		}else if(packet.getId() == GetXml.packetMapName.get("CREATE_SUCCESS")){
-			Create_SuccessPacket cpacket = (Create_SuccessPacket)packet;
-			client.setClientId(cpacket.getObjectId());
+			ev.setCancelled(true);
 		}
-		
-		return false;
-	}
-
-	@Override
-	public boolean onSend(Client client, Packet packet, Type to) {
-		
-		return false;
 	}
 }

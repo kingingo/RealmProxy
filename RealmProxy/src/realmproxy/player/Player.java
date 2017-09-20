@@ -17,7 +17,9 @@ import realmbase.RealmBase;
 import realmbase.data.Callback;
 import realmbase.data.Type;
 import realmbase.encryption.RC4;
-import realmbase.listener.PacketManager;
+import realmbase.event.EventManager;
+import realmbase.event.events.PacketReceiveEvent;
+import realmbase.event.events.PacketSendEvent;
 import realmbase.packets.Packet;
 import realmbase.packets.client.HelloPacket;
 import realmbase.xml.GetXml;
@@ -68,9 +70,10 @@ public class Player extends Client{
 	
 	public void sendPacketToClient(Packet packet){
 		if(this.localSocket!=null && this.localSocket.isConnected()){
-			boolean cancel = PacketManager.send(this, packet, Type.CLIENT);
+			PacketSendEvent event = new PacketSendEvent(packet, Type.CLIENT, this, false);
+			EventManager.callEvent(event);
 				
-			if(!cancel){
+			if(!event.isCancelled()){
 				byte[] packetBytes = packet.toByteArray();
 				try {
 					this.localSendRC4.cipher(packetBytes);
@@ -118,11 +121,26 @@ public class Player extends Client{
 								}
 								this.remoteBufferIndex -= packetLength;
 								this.remoteRecvRC4.cipher(packetBytes);
-//								if(packetId!=74&&packetId!=33&&packetId!=18&&packetId!=101&&packetId!=1&&packetId!=35&&packetId!=52&&packetId!=102&&packetId!=69)
-									RealmBase.println("Server -> Client: Id:"+(GetXml.packetMap.containsKey(String.valueOf(packetId)) ? GetXml.packetMap.get(String.valueOf(packetId)) : packetId)+" Length: "+packetBytes.length);
+
+								if(packetId != GetXml.packetMapName.get("UPDATE")
+										&& packetId != GetXml.packetMapName.get("TEXT")
+										&& packetId != GetXml.packetMapName.get("NEWTICK")
+										&& packetId != GetXml.packetMapName.get("SHOWEFFECT")
+										&& packetId != GetXml.packetMapName.get("PING")
+										&& packetId != GetXml.packetMapName.get("NOTIFICATION")
+										&& packetId != GetXml.packetMapName.get("UPDATEACK")
+										/*&& packetId != GetXml.packetMapName.get("DAMAGE")
+										&& packetId != GetXml.packetMapName.get("SERVERPLAYERSHOOT")
+										&& packetId != GetXml.packetMapName.get("ALLYSHOOT")
+										&& packetId != GetXml.packetMapName.get("SHOOT")
+										&& packetId != GetXml.packetMapName.get("ENEMYSHOOT")*/)
+									RealmBase.println("Server->Client: P:"+(GetXml.packetMap.containsKey(String.valueOf(packetId)) ? GetXml.packetMap.get(String.valueOf(packetId)) : packetId)+" Id:"+packetId+" Length: "+packetBytes.length);
 								
 								Packet packet = Packet.create(packetId, packetBytes);
-								if(!PacketManager.receive(this, packet, Type.SERVER))sendPacketToClient(packet);
+								PacketReceiveEvent event = new PacketReceiveEvent(packet, Type.SERVER, this, false);
+								EventManager.callEvent(event);
+								
+								if(!event.isCancelled())sendPacketToClient(packet);
 							}
 						}
 						this.remoteNoDataTime = System.currentTimeMillis();
@@ -157,11 +175,25 @@ public class Player extends Client{
 						}
 						this.localBufferIndex -= packetLength;
 						this.localRecvRC4.cipher(packetBytes);
-//						if(packetId!=74&&packetId!=33&&packetId!=18&&packetId!=101&&packetId!=1&&packetId!=35&&packetId!=52&&packetId!=102&&packetId!=69)
-							RealmBase.println("Client -> Server: Id:"+(GetXml.packetMap.containsKey(String.valueOf(packetId)) ? GetXml.packetMap.get(String.valueOf(packetId)) : packetId)+" Length: "+packetBytes.length);
+
+						if(packetId != GetXml.packetMapName.get("UPDATE")
+								&& packetId != GetXml.packetMapName.get("TEXT")
+								&& packetId != GetXml.packetMapName.get("NEWTICK")
+								&& packetId != GetXml.packetMapName.get("SHOWEFFECT")
+								&& packetId != GetXml.packetMapName.get("PING")
+								&& packetId != GetXml.packetMapName.get("NOTIFICATION")
+								&& packetId != GetXml.packetMapName.get("UPDATEACK")
+								/*&& packetId != GetXml.packetMapName.get("DAMAGE")
+								&& packetId != GetXml.packetMapName.get("SERVERPLAYERSHOOT")
+								&& packetId != GetXml.packetMapName.get("ALLYSHOOT")
+								&& packetId != GetXml.packetMapName.get("SHOOT")
+								&& packetId != GetXml.packetMapName.get("ENEMYSHOOT")*/)
+							RealmBase.println("Server->Client: P:"+(GetXml.packetMap.containsKey(String.valueOf(packetId)) ? GetXml.packetMap.get(String.valueOf(packetId)) : packetId)+" Id:"+packetId+" Length: "+packetBytes.length);
 						
 						Packet packet = Packet.create(packetId, packetBytes);
-						if(!PacketManager.receive(this, packet, Type.CLIENT))sendPacketToServer(packet);
+						PacketReceiveEvent event = new PacketReceiveEvent(packet, Type.CLIENT, this, false);
+						EventManager.callEvent(event);
+						if(!event.isCancelled())sendPacketToServer(packet);
 					}
 				}
 				this.localNoDataTime = System.currentTimeMillis();

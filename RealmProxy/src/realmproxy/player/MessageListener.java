@@ -1,39 +1,31 @@
 package realmproxy.player;
 
-import realmbase.Client;
 import realmbase.RealmBase;
 import realmbase.data.Location;
-import realmbase.data.Type;
-import realmbase.listener.PacketListener;
-import realmbase.listener.PacketManager;
+import realmbase.event.EventHandler;
+import realmbase.event.EventListener;
+import realmbase.event.EventManager;
+import realmbase.event.events.PacketReceiveEvent;
 import realmbase.packets.Packet;
 import realmbase.packets.client.EnemyHitPacket;
-import realmbase.packets.client.PlayerShootPacket;
-import realmbase.packets.server.ShootPacket;
-import realmbase.packets.server.Show_EffectPacket;
+import realmbase.packets.client.MovePacket;
 import realmbase.xml.GetXml;
 
-public class MessageListener implements PacketListener{
+public class MessageListener implements EventListener{
 	
 	public MessageListener() {
-		PacketManager.addListener(this);
+		EventManager.register(this);
 	}
 	
 	Location last;
 	
-	@Override
-	public boolean onReceive(Client c, Packet packet, Type from) {
-		if(packet.getId() == GetXml.packetMapName.get("ENEMYHIT")){
-			EnemyHitPacket cpacket = (EnemyHitPacket)packet;
-			RealmBase.println("C: "+cpacket.toString());
-		}
-		
-		return false;
+	@EventHandler
+	public void onReceive(PacketReceiveEvent ev) {
+		Packet packet = ev.getPacket();
+		Player player = (Player) ev.getClient();
+//		if(packet.getId() == GetXml.packetMapName.get("MOVE")){
+//			MovePacket move = (MovePacket) ev.getPacket();
+//			RealmBase.println("LOC: "+move.getNewPosition().x+"/"+move.getNewPosition().y);
+//		}
 	}
-
-	@Override
-	public boolean onSend(Client client, Packet packet, Type to) {
-		return false;
-	}
-
 }

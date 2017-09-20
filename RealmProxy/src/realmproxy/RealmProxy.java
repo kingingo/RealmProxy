@@ -63,7 +63,7 @@ public class RealmProxy {
 			}
 		};
 		
-		RealmBase.println("ListenSocket läuft!");
+		RealmBase.println("ListenSocket laeuft!");
 		if (listenSocket.start()) {
 			while (!listenSocket.isClosed()) {
 				while (!Player.getNewPlayers().isEmpty()) {
@@ -120,7 +120,7 @@ public class RealmProxy {
 				user.kick();
 			}
 		} else {
-			RealmBase.println("Der Listener hat probleme! Sei sicher ob vlt nicht schon das Programm läuft");
+			RealmBase.println("Der Listener hat probleme! Sei sicher ob vlt nicht schon das Programm laeuft");
 		}
 	}
 	
