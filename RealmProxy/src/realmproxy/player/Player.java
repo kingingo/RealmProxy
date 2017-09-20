@@ -134,7 +134,7 @@ public class Player extends Client{
 										&& packetId != GetXml.packetMapName.get("ALLYSHOOT")
 										&& packetId != GetXml.packetMapName.get("SHOOT")
 										&& packetId != GetXml.packetMapName.get("ENEMYSHOOT")*/)
-									RealmBase.println("Server->Client: P:"+(GetXml.packetMap.containsKey(String.valueOf(packetId)) ? GetXml.packetMap.get(String.valueOf(packetId)) : packetId)+" Id:"+packetId+" Length: "+packetBytes.length);
+									RealmBase.println("Server->Client: P:"+(GetXml.packetMap.containsKey(String.valueOf(packetId)) ? GetXml.packetMap.get(String.valueOf(packetId)) : packetId)+" Id:"+packetId+" L:"+packetBytes.length);
 								
 								Packet packet = Packet.create(packetId, packetBytes);
 								PacketReceiveEvent event = new PacketReceiveEvent(packet, Type.SERVER, this, false);
@@ -188,7 +188,7 @@ public class Player extends Client{
 								&& packetId != GetXml.packetMapName.get("ALLYSHOOT")
 								&& packetId != GetXml.packetMapName.get("SHOOT")
 								&& packetId != GetXml.packetMapName.get("ENEMYSHOOT")*/)
-							RealmBase.println("Server->Client: P:"+(GetXml.packetMap.containsKey(String.valueOf(packetId)) ? GetXml.packetMap.get(String.valueOf(packetId)) : packetId)+" Id:"+packetId+" Length: "+packetBytes.length);
+							RealmBase.println("Client->Server: P:"+(GetXml.packetMap.containsKey(String.valueOf(packetId)) ? GetXml.packetMap.get(String.valueOf(packetId)) : packetId)+" Id:"+packetId+" L:"+packetBytes.length);
 						
 						Packet packet = Packet.create(packetId, packetBytes);
 						PacketReceiveEvent event = new PacketReceiveEvent(packet, Type.CLIENT, this, false);
