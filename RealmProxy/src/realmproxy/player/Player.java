@@ -50,7 +50,7 @@ public class Player extends Client{
 		getNewPlayers().add(this);
 	}
 	
-	public boolean connect(HelloPacket packet, int gameId) {
+	public boolean connect(final HelloPacket packet, int gameId) {
 		final InetSocketAddress socketAddress = RealmProxy.getSocketAddress(gameId);
 
 		return connect(socketAddress, new Callback<Client>() {
