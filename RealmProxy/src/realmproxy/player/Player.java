@@ -58,7 +58,7 @@ public class Player extends Client{
 			@Override
 			public void call(Client client, Throwable exception) {
 				if(exception != null){
-					RealmBase.println("Kick!?");
+					exception.printStackTrace();
 					kick();
 				}else{
 					RealmBase.println("Send HelloPacket");
@@ -121,7 +121,7 @@ public class Player extends Client{
 								}
 								this.remoteBufferIndex -= packetLength;
 								this.remoteRecvRC4.cipher(packetBytes);
-
+								
 								if(packetId != GetXml.packetMapName.get("UPDATE")
 										&& packetId != GetXml.packetMapName.get("TEXT")
 										&& packetId != GetXml.packetMapName.get("NEWTICK")
@@ -174,6 +174,7 @@ public class Player extends Client{
 						}
 						this.localBufferIndex -= packetLength;
 						this.localRecvRC4.cipher(packetBytes);
+						RealmBase.println("Packet: "+packetBytes);
 
 						if(packetId != GetXml.packetMapName.get("UPDATE")
 								&& packetId != GetXml.packetMapName.get("TEXT")
